@@ -1,0 +1,190 @@
+
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.App {
+    background: rgb(255, 204, 102);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 1;
+}
+
+.App * {
+    box-sizing: border-box;
+}
+
+.background {
+    background: rgb(102, 0, 153);
+    position: fixed;
+    height: 150px;
+    width: 100%;
+    z-index: -1;
+}
+
+.row {
+    margin-bottom: 0px;
+}
+
+.container-fluid {
+    padding: 0px 110px;
+}
+
+.chat {
+    background: rgb(255, 255, 255);
+    height: 920px;
+    margin-top: 35px;
+    overflow: auto;
+}
+
+.leftSide {
+    background: rgba(80, 79, 79, 0.1);
+    /* width: 25%; */
+    height: 920px;
+    overflow: scroll;
+} 
+
+.chattingArea {
+    background: rgb(0, 0, 0,0.8);
+    padding: 0px;
+    /* width: 75%; */
+    height: 920px;
+    word-break: break-word;
+    border-bottom: 5px solid  #660099;
+}
+
+.chatBar ul {
+    background: rgb(255, 204, 102);
+    display: block;
+    position: relative;
+    /* top: -7px; */
+    overflow: auto;
+    margin-bottom: 0px;
+    /* margin-left: 175px; */
+    color:  rgb(102, 0, 153);
+    border-bottom:1px solid rgb(129, 129, 129, 0.7); 
+}
+
+.chatBar ul li {
+    list-style-type: none;
+    float: right;
+    padding: 10px 10px 10px 45px;
+}
+
+.chatBar ul li i {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.chatBox {
+    /* background: red; */
+    padding: 10px 50px 10px 50px;
+    overflow-y: scroll;
+}
+
+.chatLog {
+    /* background: #3399CC second box k liye */
+    background: rgb(0, 153, 102);
+    position: relative;
+    display: block;
+    max-width: 80%;
+    border-radius: 50px;
+    border-top-left-radius: 0px;
+    margin-bottom: 10px;
+    outline: none;
+    border: none;
+    text-align: justify;
+}
+
+.chatLog .chatAuthor {
+    position: relative;
+    /* background: green; */
+    padding: 0px 5px;
+    margin-bottom: 0px; 
+    margin: 0px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Acme', sans-serif;
+    text-transform: capitalize;
+    letter-spacing: 1.5px;
+    color: white;
+    border: none;
+    outline: none;
+    border-bottom:1px solid rgb(129, 129, 129, 0.7);
+}
+
+.chatLog .chatMessage {
+    /* background: gray; */
+    position: relative;
+    top: -13px;
+    padding: 2px 14px 2px 25px;
+    margin-bottom: 0px;
+    /* font-weight: bold; */
+    font-family: "satisfy", cursive;
+    /* text-transform: capitalize; */
+    letter-spacing: 0.5px;
+    color: black;
+    font-size: 20px;
+    line-height: 20px;
+    word-break: break-word;
+} 
+
+.writeMessage {
+    background: rgba(80, 79, 79, 0.1);
+    position: fixed;
+    bottom: 32px;
+    width: 903px;
+    padding: 10px 20px;
+    overflow: auto;
+    border-top: 1px solid rgb(129, 129, 129, 0.7);
+}
+
+.hearts { 
+    background: white;
+    color: rgb(102, 0, 153);
+    float: left;
+    position: relative;
+    padding: 9px;
+    top: 48px;
+    left: 0px;
+    font-size: 30px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.send {
+    background: white;
+    color: rgb(102, 0, 153);
+    float: right;
+    position: relative;
+    padding: 9px;
+    left: 0px;
+    top: 48px;
+    font-size: 30px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.text {
+    background: rgb(0, 0, 0,0.4);
+    position: relative;
+    display: block;
+    left: 0px;
+    width: 100%;
+    padding: 10px 80px 10px 60px;
+    color: white;
+    font-size: 20px;
+    font-family: "satisfy", cursive;
+    letter-spacing: 0.5px;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+}
+
+.writeMessage button {
+    float: right;
+}

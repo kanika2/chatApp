@@ -1,0 +1,106 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.nav {
+    /* background: green; */
+    padding: 5px 0px 15px 0px;
+    border-bottom: 2px solid rgb(129, 129, 129, 0.2);
+}
+
+.photo {
+    background-image: url("https://www.squ.edu.om/Portals/85/user_icon.png") ;
+    background-position: center;
+    background-size: cover;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.nav ul {
+    display: inline-block;
+    position: relative;
+    top: -7px;
+    overflow: auto;
+    margin-bottom: 0px;
+    margin-left: 175px;
+    color:  rgb(102, 0, 153);
+}
+
+.nav ul li {
+    list-style-type: none;
+    float: right;
+    padding-left: 45px;
+}
+
+.nav ul li i {
+    font-size: 30px;
+}
+
+.search {
+    overflow: auto;
+    border-bottom: 2px solid rgb(129, 129, 129, 0.2);
+}
+
+.search .inputSearch {
+    display: block;
+    background: rgb(129, 129, 129, 0.2);
+    color: black;
+    width: 100%;
+    padding: 8px 60px 8px 10px;
+    margin: 0px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    line-height: 20px;
+}
+
+.search-icon {
+    /* background: yellow; */
+    color: rgb(102, 0, 153);
+    float: right;
+    position: relative;
+    padding: 9px;
+    top: -36px;
+    font-size: 18px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.user {
+    /* background: red; */
+    padding-top: 35px;
+}
+
+.activeUser {
+    padding: 5px;
+}
+.userPhoto {
+    background-image: url("https://www.squ.edu.om/Portals/85/user_icon.png") ;
+    background-position: center;
+    background-size: cover;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.user p{
+    display: inline-block;
+    position: relative;
+    width: 85%;
+    margin-left: 20px;
+    margin-bottom: 0px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    top: -7px;
+    font-size: 17px;
+    font-family: 'Satisfy';
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+    line-height: 25px;
+    border-bottom: 1px solid rgb(129, 129, 129, 0.2);
+}
