@@ -23,16 +23,16 @@
     display: inline-block;
     position: relative;
     top: -7px;
-    overflow: auto;
-    margin-bottom: 0px;
-    margin-left: 175px;
     color:  rgb(102, 0, 153);
 }
 
 .nav ul li {
+    display: inline-block;
     list-style-type: none;
-    float: right;
     padding-left: 45px;
+    position: relative;
+    top: 22px;
+    font-size: 18px;
 }
 
 .nav ul li i {
@@ -72,11 +72,17 @@
 
 .user {
     /* background: red; */
+    position: absolute;
     padding-top: 35px;
+    overflow: auto;
+    width: 98%;
+    height: 58%;
 }
 
 .activeUser {
     padding: 5px;
+    margin-top: 20px;
+    border-bottom: 1px solid rgb(129, 129, 129, 0.2);
 }
 .userPhoto {
     background-image: url("https://www.squ.edu.om/Portals/85/user_icon.png") ;
@@ -86,21 +92,16 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    position: relative;
+    top: -6px;
 }
 
 .user p{
     display: inline-block;
     position: relative;
-    width: 85%;
-    margin-left: 20px;
-    margin-bottom: 0px;
-    padding-left: 20px;
-    padding-bottom: 20px;
-    top: -7px;
     font-size: 17px;
     font-family: 'Satisfy';
     letter-spacing: 0.5px;
     text-transform: capitalize;
     line-height: 25px;
-    border-bottom: 1px solid rgb(129, 129, 129, 0.2);
 }

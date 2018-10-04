@@ -59,13 +59,15 @@ export default class ChatApp extends Component {
 }
 
   readMessage = ()=> {
-    let dataArray = []
     this.state.database.ref("/msg").on("value", (message) => {
+      let dataArray = [];
       var messages = message.val();
       for(let key in messages) {
         dataArray.push(messages[key]);
       }
-      this.setState({messageArray : dataArray})
+      this.setState({messageArray : dataArray});
+      var elem = document.getElementsByClassName('chatBox');
+      elem[0].scrollTop = elem[0].scrollHeight;
   });
 }
 
@@ -83,16 +85,19 @@ export default class ChatApp extends Component {
             <div className="chattingArea col-sm-9">
             <div className="chatBar">
               <ul>
-                <li><i className="fas fa-ellipsis-v"></i></li>
+                {/* <li><i className="fas fa-ellipsis-v"></i></li>
                 <li><i className="fas fa-comment-alt"></i></li>
-                <li><i className="fas fa-paperclip"></i></li>
+                <li><i className="fas fa-paperclip"></i></li> */}
+                <li><button className="logoutButton">Logout</button></li>
               </ul>
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
                 return (
-                  <div className="chatLog" key ={index}>
-                    <p className="chatAuthor">{value.author}</p><br/>
-                    <p className="chatMessage">{value.body}</p>
+                  <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()=="kanika" ? {textAlign: "right"} : {textAlign: "left"} }>
+                    <div className={ (value.author).toLowerCase()=="kanika" ? "chatLogAuthor" : "chatLog"} key ={index}>
+                      <p className="chatAuthor">{value.author}</p><br/>
+                      <p className="chatMessage">{value.body}</p>
+                    </div>
                   </div>
                 );
               })}

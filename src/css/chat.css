@@ -6,12 +6,13 @@
 
 .App {
     background: rgb(255, 204, 102);
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;
     z-index: 1;
+    height: 100%;
 }
 
 .App * {
@@ -21,7 +22,7 @@
 .background {
     background: rgb(102, 0, 153);
     position: fixed;
-    height: 150px;
+    height: 25%;
     width: 100%;
     z-index: -1;
 }
@@ -38,14 +39,12 @@
     background: rgb(255, 255, 255);
     height: 920px;
     margin-top: 35px;
-    overflow: auto;
 }
 
 .leftSide {
     background: rgba(80, 79, 79, 0.1);
     /* width: 25%; */
     height: 920px;
-    overflow: scroll;
 } 
 
 .chattingArea {
@@ -81,16 +80,26 @@
 }
 
 .chatBox {
-    /* background: red; */
+    height: 55%;
     padding: 10px 50px 10px 50px;
     overflow-y: scroll;
 }
 
+.chatLogAuthor {
+    background: #3399cc;
+    display: inline-block;
+    max-width: 80%;
+    border-radius: 50px;
+    border-top-right-radius: 0px;
+    margin-bottom: 10px;
+    outline: none;
+    border: none;
+    text-align: justify;
+}
+
 .chatLog {
-    /* background: #3399CC second box k liye */
-    background: rgb(0, 153, 102);
-    position: relative;
-    display: block;
+    background: rgb(0,153,102);
+    display: inline-block;
     max-width: 80%;
     border-radius: 50px;
     border-top-left-radius: 0px;
@@ -100,10 +109,10 @@
     text-align: justify;
 }
 
+.chatLogAuthor .chatAuthor,
 .chatLog .chatAuthor {
     position: relative;
     /* background: green; */
-    padding: 0px 5px;
     margin-bottom: 0px; 
     margin: 0px 10px;
     font-size: 20px;
@@ -117,6 +126,20 @@
     border-bottom:1px solid rgb(129, 129, 129, 0.7);
 }
 
+
+.chatLogAuthor .chatAuthor {
+    padding: 8px 0 6px;
+    padding-left: 15px;
+    padding-right: 10px;
+}
+
+.chatLog .chatAuthor {
+    padding: 8px 0 6px;
+    padding-left: 10px;
+    padding-right: 15px;
+}
+
+.chatLogAuthor .chatMessage,
 .chatLog .chatMessage {
     /* background: gray; */
     position: relative;
@@ -136,7 +159,7 @@
 .writeMessage {
     background: rgba(80, 79, 79, 0.1);
     position: fixed;
-    bottom: 32px;
+    bottom: 3%;
     width: 903px;
     padding: 10px 20px;
     overflow: auto;
@@ -161,6 +184,7 @@
     color: rgb(102, 0, 153);
     float: right;
     position: relative;
+    z-index: 10;
     padding: 9px;
     left: 0px;
     top: 48px;
