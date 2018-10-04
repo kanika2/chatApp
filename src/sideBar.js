@@ -12,7 +12,7 @@ export default class SideBar extends Component {
                         </div>
                         <div className="col-sm-8">
                             <ul>
-                                <li>Nikhil Thakur</li>
+                                <li>{this.props.user.displayName}</li>
                             </ul>
                         </div>
                     </div>

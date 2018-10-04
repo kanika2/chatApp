@@ -31,9 +31,9 @@ export default class ChatApp extends Component {
     if(user) {
       user = JSON.parse(user);
     }
-    this.setState(user);
+    this.setState({user});
     console.log(user);
-    // console.log("user: ", user);
+    console.log("user: ", user);
     //console.log("did mount");
   }
 
@@ -52,6 +52,7 @@ export default class ChatApp extends Component {
   }
 
   sendMessageDatabase = ()=> {
+    console.log(this.state.user.displayName);
     var message = this.state.message;
     var data = {
         author: this.state.user.displayName,
@@ -81,7 +82,7 @@ export default class ChatApp extends Component {
           <div className="chat row">
             <div className="leftSide col-sm-3">
               <div>
-                <SideBar/>
+                <SideBar user={this.state.user}/>
               </div>
             </div>
             <div className="chattingArea col-sm-9">
@@ -95,8 +96,8 @@ export default class ChatApp extends Component {
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
                 return (
-                  <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()=="kanika" ? {textAlign: "right"} : {textAlign: "left"} }>
-                    <div className={ (value.author).toLowerCase()=="kanika" ? "chatLogAuthor" : "chatLog"} key ={index}>
+                  <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()==(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
+                    <div className={ (value.author).toLowerCase()==(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
                       <p className="chatAuthor">{value.author}</p><br/>
                       <p className="chatMessage">{value.body}</p>
                     </div>
