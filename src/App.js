@@ -19,18 +19,20 @@ export default class ChatApp extends Component {
       message : "",
       display : "",
       messageArray : [],
+      user: "",
       database : fire.database()
     }
   }
 
   componentDidMount() {
     this.readMessage();
-    //console.log(this.props);
-    // let user  = localStorage.getItem('user');
-    // if(user) {
-    //   user = JSON.parse(user);
-    // }
-    // this.setState(user);
+    console.log(this.props);
+    let user  = localStorage.getItem('user');
+    if(user) {
+      user = JSON.parse(user);
+    }
+    this.setState(user);
+    console.log(user);
     // console.log("user: ", user);
     //console.log("did mount");
   }
@@ -52,7 +54,7 @@ export default class ChatApp extends Component {
   sendMessageDatabase = ()=> {
     var message = this.state.message;
     var data = {
-        author: "kanika",
+        author: this.state.user.displayName,
         body: message
     }
     this.state.database.ref("/msg").push(data);

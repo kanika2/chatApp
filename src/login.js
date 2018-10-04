@@ -38,6 +38,7 @@ class Login extends Component {
             console.log("login success");
             this.props.login(user)
             this.setState({userName : this.props.user.displayName});
+            window.location.assign("/chat");
             // user = JSON.stringify(user);
             // localStorage.setItem('user', user);
             // ...
