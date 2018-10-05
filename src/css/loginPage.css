@@ -21,6 +21,7 @@
     border-radius: 10px;
     border: none;
     width: 50%;
+    outline: none;
     animation-name: example;
     animation-duration: 5s;
     animation-iteration-count: infinite;
