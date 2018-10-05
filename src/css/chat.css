@@ -22,9 +22,10 @@
 .background {
     background: rgb(102, 0, 153);
     position: fixed;
-    height: 25%;
+    padding: 60px 0;
     width: 100%;
     z-index: -1;
+    box-shadow: 0 4px 40px -20px rgba(0, 0, 0, 0.3), 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .row {

@@ -10,12 +10,17 @@ class Login extends Component {
     constructor (props) {
         super(props);
         this.state = {
+            user : {},
             userName : "",
             buttonValue : "Sign In",
         }
     }
 
     componentDidMount() {
+        let signedInUser = localStorage.getItem('user');
+        if(signedInUser) {
+            this.setState({user: signedInUser});
+        }
         console.log(this.props);
         firebase.auth().onAuthStateChanged((user)=> {
             if (user) {
@@ -39,8 +44,8 @@ class Login extends Component {
             this.props.login(user)
             this.setState({userName : this.props.user.displayName});
             window.location.assign("/chat");
-            // user = JSON.stringify(user);
-            // localStorage.setItem('user', user);
+            user = JSON.stringify(user);
+            localStorage.setItem('user', user);
             // ...
           }).catch((error)=> {
             // Handle Errors here.
@@ -96,7 +101,15 @@ class Login extends Component {
     render () {
         return(
             <div className="App">
-                <div className="background"></div>
+                <div className="background">
+                    <h2 className="chatAppTitle">The ChatApp</h2>
+                </div>
+                <div className="userWrapper">
+                    <div className="userImage"></div>
+                    <div className="userName">
+                        <h2>{this.state.user.displayName}</h2>
+                    </div>
+                </div>
                 <div className="loginBtn" >
                     <button onClick={this.authHandle}><p>{this.state.buttonValue}</p></button>
                 </div>
