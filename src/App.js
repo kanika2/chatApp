@@ -20,7 +20,7 @@ export default class ChatApp extends Component {
       display : "",
       messageArray : [],
       user: "",
-      database : fire.database()
+      database : fire.database(),
     }
   }
 
@@ -32,8 +32,6 @@ export default class ChatApp extends Component {
       user = JSON.parse(user);
     }
     this.setState({user});
-    console.log(user);
-    console.log("user: ", user);
     //console.log("did mount");
   }
 
@@ -52,14 +50,14 @@ export default class ChatApp extends Component {
   }
 
   sendMessageDatabase = ()=> {
-    console.log(this.state.user.displayName);
+    // console.log(this.state.user.displayName);
     var message = this.state.message;
     var data = {
         author: this.state.user.displayName,
         body: message
     }
     this.state.database.ref("/msg").push(data);
-}
+  }
 
   readMessage = ()=> {
     this.state.database.ref("/msg").on("value", (message) => {

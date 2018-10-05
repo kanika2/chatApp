@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import "./css/sideBar.css";
 
 export default class SideBar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userName : this.props.user.displayName,
+        }
+    }
+
     render() {
 
         return(

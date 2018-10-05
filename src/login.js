@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import {Link} from "react-router-dom";
 import fire from "./fire"
-import firebase from "firebase"
+import firebase from "firebase";
 import { connect } from 'react-redux';
 import * as actionTypes from "./actionType/action";
 import "./css/loginPage.css"
@@ -10,18 +10,16 @@ class Login extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            user : {},
+            userList : [],
             userName : "",
+            userEmail: "",
             buttonValue : "Sign In",
+            database : fire.database(),
         }
     }
 
     componentDidMount() {
-        let signedInUser = localStorage.getItem('user');
-        if(signedInUser) {
-            this.setState({user: signedInUser});
-        }
-        console.log(this.props);
+        // console.log(this.props);
         firebase.auth().onAuthStateChanged((user)=> {
             if (user) {
               // User is signed in.
@@ -33,6 +31,37 @@ class Login extends Component {
           });
     }
 
+
+    sendUserDatabse = () => {
+        var users = {
+            author: this.state.userName,
+            authorMail : this.state.userEmail,
+
+        }
+        this.state.database.ref("/Users").push(users);
+    }
+
+    readUserDatabase = ()=> {
+        this.state.database.ref("/Users").once("value", (chatValue) => {
+            var chatter = chatValue.val(); 
+            let userArray = [];
+            for (let key in chatter){
+                // copying data from database to array of object
+                console.log(chatter[key]);
+                userArray.push(chatter[key]);
+            }
+            this.setState({userList : userArray});
+        });
+        this.state.userList.map((value, index) => {
+            return (
+                <div>
+                    {(value.authorMail ==!  this.state.userEmail) ? this.state.sendUserDatabse(): console.log("hello")}
+                </div>
+            );
+        })
+        // this.sendUserDatabse();        
+    }
+
     signIn = ()=> {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then((result)=> {
@@ -42,11 +71,13 @@ class Login extends Component {
             var user = result.user;
             console.log("login success");
             this.props.login(user)
-            this.setState({userName : this.props.user.displayName});
+            // console.log(user);
+            this.setState({userName : this.props.user.displayName, userEmail: this.props.user.email});
+            this.readUserDatabase();
+            
             window.location.assign("/chat");
             user = JSON.stringify(user);
             localStorage.setItem('user', user);
-            // ...
           }).catch((error)=> {
             // Handle Errors here.
             var errorCode = error.code;
@@ -56,7 +87,7 @@ class Login extends Component {
             // The firebase.auth.AuthCredential type that was used.
             var credential = error.credential;
             // ...
-            console.log("error");
+            console.log(" aa gya error");
           });
         // firebase.auth().signInWithRedirect(provider);
         // firebase.auth().getRedirectResult().then(function(result) {
