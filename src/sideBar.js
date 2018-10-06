@@ -6,8 +6,28 @@ export default class SideBar extends Component {
         super(props);
         this.state = {
             userName : this.props.user.displayName,
+            activeUsers,
         }
+        let activeUsers = localStorage.getItem("userList");// ye user jo localstorage me hai use get kiya
+        console.log(activeUsers);
+        activeUsers = JSON.parse(activeUsers);// active user ko parse(object form) kiya nd active user me store krake value update kri uski
     }
+
+    // activeUsersMap = () => {
+    //     this.state.activeUsers.map((value, index)=>{
+    //         return(
+    //             <div>
+    //                 <div className="col-sm-2">
+    //                         <div className="userPhoto"></div>
+    //                     </div>
+    //                     <div className="col-sm-10">
+    //                         <p>{value.author}</p>
+    //                     </div>
+    //             </div>
+    //         );
+    //     })
+    // }
+
 
     render() {
         return(
@@ -19,7 +39,7 @@ export default class SideBar extends Component {
                         </div>
                         <div className="col-sm-8">
                             <ul>
-                                <li>{this.props.user.displayName}</li>
+                                <li>{this.state.userName}</li>
                             </ul>
                         </div>
                     </div>
@@ -30,76 +50,18 @@ export default class SideBar extends Component {
                 </div>
                 <div className="user">
                     <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
-                    </div>
-                    <div className="activeUser row">
-                        <div className="col-sm-2">
-                            <div className="userPhoto"></div>
-                        </div>
-                        <div className="col-sm-10">
-                            <p>Users</p>
-                        </div>
+                        {/* {this.state.activeUsers.map((value, index)=>{
+                            return(
+                                <div>
+                                    <div className="col-sm-2">
+                                        <div className="userPhoto"></div>
+                                    </div>
+                                    <div className="col-sm-10">
+                                        <p>Users</p>
+                                    </div>
+                                </div>
+                            );
+                        })} */}
                     </div>
                 </div>
             </div>

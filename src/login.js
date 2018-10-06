@@ -29,10 +29,11 @@ class Login extends Component {
                 this.setState({buttonValue : "Sign In"});
             }
           });
+
     }
 
-
     sendUserDatabse = () => {
+        console.log("sendUser");
         var users = {
             author: this.state.userName,
             authorMail : this.state.userEmail,
@@ -44,23 +45,31 @@ class Login extends Component {
     readUserDatabase = ()=> {
         this.state.database.ref("/Users").once("value", (chatValue) => {
             var chatter = chatValue.val(); 
-            let userArray = [];
-            for (let key in chatter){
-                // copying data from database to array of object
-                console.log(chatter[key]);
-                userArray.push(chatter[key]);
-            }
-            this.setState({userList : userArray});
-        });
-        this.state.userList.map((value, index) => {
-            return (
-                <div>
-                    {(value.authorMail ==!  this.state.userEmail) ? this.state.sendUserDatabse(): console.log("hello")}
-                </div>
-            );
-        })
-        // this.sendUserDatabse();        
+            if (chatter === null) {
+                this.sendUserDatabse();
+                console.log("data send");
+            }else {
+                let userArray = [];
+                // console.log(chatter);
+                for (let key in chatter){
+                    // copying data from database to array of object
+                    // console.log(chatter[key]);
+                    userArray.push(chatter[key]);
+                }
+                this.setState({userList : userArray});
+                // state update hoo gyi yhan pr
+                // console.log(this.state.userList);
+                userArray.map((value, index) => {
+                // console.log(value.authorMail);
+                return (
+                    (value.authorMail ==! this.state.userEmail) ? this.sendUserDatabse(): console.log("hello")
+                );
+                })
+            }  
+            // console.log(this.state.userList);
+        });    
     }
+
 
     signIn = ()=> {
         var provider = new firebase.auth.GoogleAuthProvider();
@@ -74,10 +83,15 @@ class Login extends Component {
             // console.log(user);
             this.setState({userName : this.props.user.displayName, userEmail: this.props.user.email});
             this.readUserDatabase();
-            
-            window.location.assign("/chat");
+
+            //connecting to chat page after sign is complete.
+            // window.location.assign("/chat");
+
+            //yhan user(left side vala) ek variable jisme user(right vala, ye ek obj hai) string me convert hoke user(left side) me store hoo rha hai
             user = JSON.stringify(user);
-            localStorage.setItem('user', user);
+            localStorage.setItem('user', user);// yhan localstorage me usse store kr diya ("key", value), value is left vala user.
+            // now when we store the variable hum usko parse krate hai jha humne use use krna hai.
+            
           }).catch((error)=> {
             // Handle Errors here.
             var errorCode = error.code;

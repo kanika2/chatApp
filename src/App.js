@@ -26,7 +26,7 @@ export default class ChatApp extends Component {
 
   componentDidMount() {
     this.readMessage();
-    console.log(this.props);
+    // console.log(this.props);
     let user  = localStorage.getItem('user');
     if(user) {
       user = JSON.parse(user);
@@ -94,8 +94,8 @@ export default class ChatApp extends Component {
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
                 return (
-                  <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()==(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
-                    <div className={ (value.author).toLowerCase()==(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
+                  <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
+                    <div className={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
                       <p className="chatAuthor">{value.author}</p><br/>
                       <p className="chatMessage">{value.body}</p>
                     </div>
