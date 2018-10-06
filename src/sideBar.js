@@ -3,30 +3,16 @@ import "./css/sideBar.css";
 
 export default class SideBar extends Component {
     constructor(props) {
+        let activeUsers = localStorage.getItem("userArray");// ye user jo localstorage me hai use get kiya
+        activeUsers = JSON.parse(activeUsers);
+        // active user ko parse(object form) kiya nd active user me store krake value update kri uski
         super(props);
         this.state = {
             userName : this.props.user.displayName,
             activeUsers,
         }
-        let activeUsers = localStorage.getItem("userArray");// ye user jo localstorage me hai use get kiya
-        console.log(activeUsers);
-        activeUsers = JSON.parse(activeUsers);// active user ko parse(object form) kiya nd active user me store krake value update kri uski
+        // console.log(this.state.userName);
     }
-
-    // activeUsersMap = () => {
-    //     this.state.activeUsers.map((value, index)=>{
-    //         return(
-    //             <div>
-    //                 <div className="col-sm-2">
-    //                         <div className="userPhoto"></div>
-    //                     </div>
-    //                     <div className="col-sm-10">
-    //                         <p>{value.author}</p>
-    //                     </div>
-    //             </div>
-    //         );
-    //     })
-    // }
 
 
     render() {
@@ -50,20 +36,18 @@ export default class SideBar extends Component {
                     <i className="fas fa-search search-icon"></i>
                 </div>
                 <div className="user">
-                    <div className="activeUser row">
-                        {/* {this.state.activeUsers.map((value, index)=>{
-                            return(
-                                <div>
-                                    <div className="col-sm-2">
-                                        <div className="userPhoto"></div>
-                                    </div>
-                                    <div className="col-sm-10">
-                                        <p>Users</p>
-                                    </div>
+                    {this.state.activeUsers.map((value, index)=>{
+                        return(
+                            <div key= {index} className="activeUser row">
+                                <div className="col-sm-2">
+                                    <div className="userPhoto"></div>
                                 </div>
-                            );
-                        })} */}
-                    </div>
+                                <div className="col-sm-10">
+                                    <p>Users</p>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         );

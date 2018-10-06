@@ -14,7 +14,7 @@ import SideBar from "./sideBar";
 export default class ChatApp extends Component {
   constructor(props) {
     super(props);
-    console.log();
+    // console.log();
     this.state = {
       message : "",
       display : "",
@@ -80,6 +80,7 @@ export default class ChatApp extends Component {
           <div className="chat row">
             <div className="leftSide col-sm-3">
               <div>
+                {/* {console.log(this.state.user)} */}
                 <SideBar user={this.state.user}/>
               </div>
             </div>

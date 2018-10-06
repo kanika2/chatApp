@@ -74,6 +74,7 @@ class Login extends Component {
                 localStorage.setItem('userArray', userArray);
             }  
             // console.log(this.state.userList);
+            window.location.assign("/chat");
         });    
     }
 
@@ -90,9 +91,6 @@ class Login extends Component {
             // console.log(user);
             this.setState({userName : this.props.user.displayName, userEmail: this.props.user.email});
             this.readUserDatabase();
-
-            //connecting to chat page after sign is complete.
-            window.location.assign("/chat");
 
             //yhan user(left side vala) ek variable jisme user(right vala, ye ek obj hai) string me convert hoke user(left side) me store hoo rha hai
             user = JSON.stringify(user);
