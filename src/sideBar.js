@@ -43,7 +43,7 @@ export default class SideBar extends Component {
                                     <div className="userPhoto"></div>
                                 </div>
                                 <div className="col-sm-10">
-                                    <p>Users</p>
+                                    <p>{value.author}</p>
                                 </div>
                             </div>
                         );
