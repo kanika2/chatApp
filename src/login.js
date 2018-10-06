@@ -146,7 +146,15 @@ class Login extends Component {
     render () {
         return(
             <div className="App">
-                <div className="background"></div>
+                <div className="background">
+                    <h2 className="chatAppTitle">The ChatApp</h2>
+                </div>
+                <div className="userWrapper">
+                    <div className="userImage"></div>
+                    <div className="userName">
+                        <h2>{this.state.user.displayName}</h2>
+                    </div>
+                </div>
                 <div className="loginBtn" >
                     <button onClick={this.authHandle}><p>{this.state.buttonValue}</p></button>
                 </div>
