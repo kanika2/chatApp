@@ -94,14 +94,16 @@ export default class ChatApp extends Component {
   typingStatusUpdate = (checkTyping) => {
     console.log(checkTyping);
     if(checkTyping) {
-       timer = false;
        if(timer) {
          clearTimeout(timeoutcount);
        }
+      timer = false;
        this.state.database.ref("/typing").set(true)
      } else {
-       timer = true;
-       timeoutcount = setTimeout(()=>{this.state.database.ref("/typing").set(false)}, 1200);
+       if(!timer) {
+        timer = true;
+       }
+       timeoutcount = setTimeout(()=>{this.state.database.ref("/typing").set(false)}, 2000);
      }
   }
   typingStatusCheck = ()=> {
@@ -171,7 +173,7 @@ export default class ChatApp extends Component {
               <div className="writeMessage">
                 <i className="fas fa-grin-hearts hearts"></i>
                 <i  onClick = {this.sendButton } className="fas fa-location-arrow send"></i>
-                <input className="text" onKeyDown={()=>{this.typingStatusUpdate(true)}} onKeyUp={()=>{this.typingStatusUpdate(false)}} placeholder="Write Your Text" type="text" onChange = {this.handlechange} onKeyDown={()=>{this.typingStatusUpdate(true)}} value={this.state.message}/>
+                <input className="text"  onKeyDown={()=>{this.typingStatusUpdate(true)}} onKeyUp={()=>{this.typingStatusUpdate(false)}} placeholder="Write Your Text" type="text" onChange = {this.handlechange} onKeyDown={()=>{this.typingStatusUpdate(true)}} value={this.state.message}/>
                 {/* <button onClick = {this.sendButton }></button> */}
               </div>
             </div>
