@@ -10,6 +10,8 @@ import fire from './fire';
 import TextField from '@material-ui/core/TextField';
 import SideBar from "./sideBar";
 
+var timer;
+var timeoutcount;
 
 export default class ChatApp extends Component {
   constructor(props) {
@@ -20,12 +22,25 @@ export default class ChatApp extends Component {
       display : "",
       messageArray : [],
       user: "",
+      readInitial: true,
+      typing: false,
       database : fire.database(),
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!Notification) {
+        alert('Desktop notifications not available in your browser. Try Chromium.'); 
+        return;
+      }
+    
+      if (Notification.permission !== "granted")
+        Notification.requestPermission();
+    });
   }
 
   componentDidMount() {
     this.readMessage();
+    this.typingStatusCheck();
     // console.log(this.props);
     let user  = localStorage.getItem('user');
     if(user) {
@@ -33,6 +48,23 @@ export default class ChatApp extends Component {
     }
     this.setState({user});
     //console.log("did mount");
+  }
+
+  notifyMe = (msg)=> {
+    if (Notification.permission !== "granted")
+      Notification.requestPermission();
+    else {
+      var notification = new Notification('The ChatApp', {
+        icon: 'http://shonari.net/wp-content/uploads/2014/05/facebook-messenger-icon.png',
+        body: (msg.author).replace(/\b\w/g, l => l.toUpperCase())+": "+msg.body,
+      });
+  
+      notification.onclick = function () {
+        window.open("http://localhost:3000/chat");      
+      };
+  
+    }
+  
   }
 
   handlechange= e => {
@@ -59,6 +91,27 @@ export default class ChatApp extends Component {
     this.state.database.ref("/msg").push(data);
   }
 
+  typingStatusUpdate = (checkTyping) => {
+    console.log(checkTyping);
+    if(checkTyping) {
+       timer = false;
+       if(timer) {
+         clearTimeout(timeoutcount);
+       }
+       this.state.database.ref("/typing").set(true)
+     } else {
+       timer = true;
+       timeoutcount = setTimeout(()=>{this.state.database.ref("/typing").set(false)}, 1200);
+     }
+  }
+  typingStatusCheck = ()=> {
+    this.state.database.ref("/typing").on("value", (status) => {
+      let typing = status.val();
+      console.log(typing);
+      this.setState({typing});
+    });
+  }
+
   readMessage = ()=> {
     this.state.database.ref("/msg").on("value", (message) => {
       let dataArray = [];
@@ -69,7 +122,14 @@ export default class ChatApp extends Component {
       this.setState({messageArray : dataArray});
       var elem = document.getElementsByClassName('chatBox');
       elem[0].scrollTop = elem[0].scrollHeight;
+      if(!this.state.readInitial) {
+        let msgObj = dataArray[dataArray.length-1];
+        let check = (msgObj.author).toLowerCase() != (this.state.user.displayName).toLowerCase();
+        console.log(check);
+        check ? this.notifyMe(msgObj) : {}
+      }
   });
+  this.setState({readInitial: false});
 }
 
   render() {
@@ -87,10 +147,14 @@ export default class ChatApp extends Component {
             <div className="chattingArea col-sm-9">
             <div className="chatBar">
               <ul>
+                { this.state.typing ?
+                <li>typing...</li>
+                : <li></li>
+                }
                 {/* <li><i className="fas fa-ellipsis-v"></i></li>
                 <li><i className="fas fa-comment-alt"></i></li>
                 <li><i className="fas fa-paperclip"></i></li> */}
-                <li><button className="logoutButton">Logout</button></li>
+                <li className="logoutButton"><button className="logoutButton">Logout</button></li>
               </ul>
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
@@ -107,7 +171,7 @@ export default class ChatApp extends Component {
               <div className="writeMessage">
                 <i className="fas fa-grin-hearts hearts"></i>
                 <i  onClick = {this.sendButton } className="fas fa-location-arrow send"></i>
-                <input className="text"  placeholder="Write Your Text" type="text" onChange = {this.handlechange} value={this.state.message}/>
+                <input className="text" onKeyDown={()=>{this.typingStatusUpdate(true)}} onKeyUp={()=>{this.typingStatusUpdate(false)}} placeholder="Write Your Text" type="text" onChange = {this.handlechange} onKeyDown={()=>{this.typingStatusUpdate(true)}} value={this.state.message}/>
                 {/* <button onClick = {this.sendButton }></button> */}
               </div>
             </div>

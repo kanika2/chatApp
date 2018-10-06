@@ -67,12 +67,18 @@
     /* margin-left: 175px; */
     color:  rgb(102, 0, 153);
     border-bottom:1px solid rgb(129, 129, 129, 0.7); 
+
+    padding: 10px 10px 10px 45px;
 }
 
 .chatBar ul li {
     list-style-type: none;
+    float: left;
+}
+
+.chatBar ul .logoutButton {
+    list-style-type: none;
     float: right;
-    padding: 10px 10px 10px 45px;
 }
 
 .chatBar ul li i {
