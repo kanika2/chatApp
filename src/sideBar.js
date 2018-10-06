@@ -8,7 +8,7 @@ export default class SideBar extends Component {
             userName : this.props.user.displayName,
             activeUsers,
         }
-        let activeUsers = localStorage.getItem("userList");// ye user jo localstorage me hai use get kiya
+        let activeUsers = localStorage.getItem("userArray");// ye user jo localstorage me hai use get kiya
         console.log(activeUsers);
         activeUsers = JSON.parse(activeUsers);// active user ko parse(object form) kiya nd active user me store krake value update kri uski
     }

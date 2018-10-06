@@ -10,7 +10,6 @@ class Login extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            userList : [],
             userName : "",
             userEmail: "",
             buttonValue : "Sign In",
@@ -28,15 +27,15 @@ class Login extends Component {
               // No user is signed in.
                 this.setState({buttonValue : "Sign In"});
             }
-          });
+        });
 
     }
 
     sendUserDatabse = () => {
         console.log("sendUser");
         var users = {
-            author: this.state.userName,
-            authorMail : this.state.userEmail,
+            author: this.props.user.displayName,
+            authorMail : this.props.user.email,
 
         }
         this.state.database.ref("/Users").push(users);
@@ -56,15 +55,23 @@ class Login extends Component {
                     // console.log(chatter[key]);
                     userArray.push(chatter[key]);
                 }
-                this.setState({userList : userArray});
                 // state update hoo gyi yhan pr
                 // console.log(this.state.userList);
+                let checkUser = false;
                 userArray.map((value, index) => {
                 // console.log(value.authorMail);
-                return (
-                    (value.authorMail ==! this.state.userEmail) ? this.sendUserDatabse(): console.log("hello")
-                );
+                    (value.authorMail === this.props.user.email) ? checkUser=true : {}
                 })
+                if (!checkUser) {
+                    userArray.push({
+                        author: this.props.user.displayName,
+                        authorMail : this.props.user.email,
+            
+                    })
+                    this.sendUserDatabse();
+                }
+                userArray = JSON.stringify(userArray);
+                localStorage.setItem('userArray', userArray);
             }  
             // console.log(this.state.userList);
         });    
@@ -85,7 +92,7 @@ class Login extends Component {
             this.readUserDatabase();
 
             //connecting to chat page after sign is complete.
-            // window.location.assign("/chat");
+            window.location.assign("/chat");
 
             //yhan user(left side vala) ek variable jisme user(right vala, ye ek obj hai) string me convert hoke user(left side) me store hoo rha hai
             user = JSON.stringify(user);
@@ -147,14 +154,14 @@ class Login extends Component {
         return(
             <div className="App">
                 <div className="background">
-                    <h2 className="chatAppTitle">The ChatApp</h2>
+                    {/* <h2 className="chatAppTitle">The ChatApp</h2> */}
                 </div>
-                <div className="userWrapper">
+                {/* <div className="userWrapper">
                     <div className="userImage"></div>
                     <div className="userName">
                         <h2>{this.state.user.displayName}</h2>
                     </div>
-                </div>
+                </div> */}
                 <div className="loginBtn" >
                     <button onClick={this.authHandle}><p>{this.state.buttonValue}</p></button>
                 </div>
