@@ -21,7 +21,9 @@ export default class ChatApp extends Component {
       message : "",
       display : "",
       messageArray : [],
-      user: "",
+      user: {
+        providerData: [""]
+      },
       readInitial: true,
       typing: false,
       database : fire.database(),
@@ -45,6 +47,7 @@ export default class ChatApp extends Component {
     let user  = localStorage.getItem('user');
     if(user) {
       user = JSON.parse(user);
+      console.log(user);
     }
     this.setState({user});
     //console.log("did mount");
@@ -136,27 +139,29 @@ export default class ChatApp extends Component {
 
   render() {
     return (
-      <div className="App" >
-        <div className="background"></div>
+      <div className="App">
+        <div className="background">
+              <h2 className="chatAppTitle">The ChatApp</h2>
+        </div>
         <div className="container-fluid">
           <div className="chat row">
             <div className="leftSide col-sm-3">
-              <div>
+              <div className="sidebarWrapper">
                 {/* {console.log(this.state.user)} */}
-                <SideBar user={this.state.user}/>
+                <SideBar />
               </div>
             </div>
             <div className="chattingArea col-sm-9">
             <div className="chatBar">
               <ul>
                 { this.state.typing ?
-                <li>typing...</li>
+                <li className="typingStatus"><span>typing...</span></li>
                 : <li></li>
                 }
                 {/* <li><i className="fas fa-ellipsis-v"></i></li>
                 <li><i className="fas fa-comment-alt"></i></li>
                 <li><i className="fas fa-paperclip"></i></li> */}
-                <li className="logoutButton"><button className="logoutButton">Logout</button></li>
+                <li className="logoutButton"><button onClick={()=>{window.location.assign("/")}}>Leave Chat</button></li>
               </ul>
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
@@ -171,9 +176,9 @@ export default class ChatApp extends Component {
               })}
               </div>
               <div className="writeMessage">
+                <input className="text"  onKeyDown={()=>{this.typingStatusUpdate(true)}} onKeyUp={()=>{this.typingStatusUpdate(false)}} placeholder="Write Your Text" type="text" onChange = {this.handlechange} onKeyDown={()=>{this.typingStatusUpdate(true)}} value={this.state.message}/>
                 <i className="fas fa-grin-hearts hearts"></i>
                 <i  onClick = {this.sendButton } className="fas fa-location-arrow send"></i>
-                <input className="text"  onKeyDown={()=>{this.typingStatusUpdate(true)}} onKeyUp={()=>{this.typingStatusUpdate(false)}} placeholder="Write Your Text" type="text" onChange = {this.handlechange} onKeyDown={()=>{this.typingStatusUpdate(true)}} value={this.state.message}/>
                 {/* <button onClick = {this.sendButton }></button> */}
               </div>
             </div>

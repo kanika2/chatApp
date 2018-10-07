@@ -10,10 +10,13 @@ class Login extends Component {
     constructor (props) {
         super(props);
         this.state = {
+            user: {},
             userName : "",
             userEmail: "",
+            userImage: "",
             buttonValue : "Sign In",
             database : fire.database(),
+            loading: true
         }
     }
 
@@ -22,11 +25,15 @@ class Login extends Component {
         firebase.auth().onAuthStateChanged((user)=> {
             if (user) {
               // User is signed in.
-                this.setState({buttonValue : "Sign Out"});
+                console.log(user);
+                console.log(user.providerData[0].photoURL);
+                let userImage = "url('"+user.providerData[0].photoURL+"')";
+                this.setState({buttonValue : "Sign Out", user, userImage});
             } else {
               // No user is signed in.
                 this.setState({buttonValue : "Sign In"});
             }
+            this.setState({loading: false});
         });
 
     }
@@ -36,7 +43,8 @@ class Login extends Component {
         var users = {
             author: this.props.user.displayName,
             authorMail : this.props.user.email,
-
+            authorPhoto : this.props.user.providerData[0].photoURL,
+            typing: false
         }
         this.state.database.ref("/Users").push(users);
     }
@@ -80,6 +88,7 @@ class Login extends Component {
 
 
     signIn = ()=> {
+        this.setState({loading: true});
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then((result)=> {
             // This gives you a Google Access Token. You can use it to access the Google API.
@@ -96,6 +105,7 @@ class Login extends Component {
             user = JSON.stringify(user);
             localStorage.setItem('user', user);// yhan localstorage me usse store kr diya ("key", value), value is left vala user.
             // now when we store the variable hum usko parse krate hai jha humne use use krna hai.
+            this.setState({loading: false});
             
           }).catch((error)=> {
             // Handle Errors here.
@@ -151,17 +161,25 @@ class Login extends Component {
     render () {
         return(
             <div className="App">
-                <div className="background">
-                    {/* <h2 className="chatAppTitle">The ChatApp</h2> */}
+                <div className="background" style={{zIndex: 10}}>
+                    <h2 className="chatAppTitle">The ChatApp</h2>
                 </div>
-                {/* <div className="userWrapper">
-                    <div className="userImage"></div>
-                    <div className="userName">
-                        <h2>{this.state.user.displayName}</h2>
-                    </div>
-                </div> */}
                 <div className="loginBtn" >
-                    <button onClick={this.authHandle}><p>{this.state.buttonValue}</p></button>
+                {this.state.loading ? <div style={{height: "200px", width: "200px", margin: "auto", backgroundRepeat: "no-repeat", "backgroundImage" : "url('http://www.dariusland.com/images/load.gif')", backgroundSize : "contain"}}></div> :
+                    this.state.buttonValue=="Sign Out" ? 
+                        <div>
+                            <div className="userWrapper">
+                                <div className="userImage" style={{"backgroundImage" : this.state.userImage}}></div>
+                                <div className="userName">
+                                    <h2>{this.state.user.displayName}</h2>
+                                </div>
+                                <button className="goToChatButton" onClick={()=> {window.location.assign("/chat")}}>Go to chat</button>
+                                <button className="signInButton" onClick={this.authHandle}><p>{this.state.buttonValue}</p></button>
+                            </div>
+                        </div>
+                         : <div>
+                         <button className="signInButton" onClick={this.authHandle}><p>{this.state.buttonValue}</p></button></div>
+                }
                 </div>
             </div>
         )

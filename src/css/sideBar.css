@@ -5,12 +5,11 @@
 
 .nav {
     /* background: green; */
-    padding: 5px 0px 15px 0px;
+    padding: 15px 2px 10px;
     border-bottom: 2px solid rgb(129, 129, 129, 0.2);
 }
 
 .photo {
-    background-image: url("https://www.squ.edu.om/Portals/85/user_icon.png") ;
     background-position: center;
     background-size: cover;
     display: inline-block;
@@ -20,19 +19,20 @@
 }
 
 .nav ul {
-    display: inline-block;
-    position: relative;
-    top: -7px;
-    color:  rgb(102, 0, 153);
+    color:  #444;
 }
 
 .nav ul li {
-    display: inline-block;
     list-style-type: none;
-    padding-left: 45px;
-    position: relative;
-    top: 22px;
+}
+
+.nav ul li p {
+    font-family: "Source Code Pro", sans-serif;
+    padding: 14px 0 2px;
+    padding-right: 5px;
     font-size: 18px;
+    font-weight: 600;
+    text-align: right;
 }
 
 .nav ul li i {
@@ -42,6 +42,7 @@
 .search {
     overflow: auto;
     border-bottom: 2px solid rgb(129, 129, 129, 0.2);
+    padding-bottom: 20px;
 }
 
 .search .inputSearch {
@@ -56,15 +57,14 @@
     border-radius: 10px;
     outline: none;
     line-height: 20px;
+    margin-bottom: -36px;
 }
 
 .search-icon {
     /* background: yellow; */
     color: rgb(102, 0, 153);
     float: right;
-    position: relative;
     padding: 9px;
-    top: -36px;
     font-size: 18px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -72,11 +72,11 @@
 
 .user {
     /* background: red; */
-    position: absolute;
+    /* position: absolute;
     padding-top: 35px;
     overflow: auto;
     width: 98%;
-    height: 58%;
+    height: 58%; */
 }
 
 .activeUser {
@@ -85,7 +85,6 @@
     border-bottom: 1px solid rgb(129, 129, 129, 0.2);
 }
 .userPhoto {
-    background-image: url("https://www.squ.edu.om/Portals/85/user_icon.png") ;
     background-position: center;
     background-size: cover;
     display: inline-block;
