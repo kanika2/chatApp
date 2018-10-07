@@ -149,7 +149,7 @@
     /* background: green; */
     margin-bottom: 0px; 
     margin: 0px 10px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     font-family: 'Acme', sans-serif;
     text-transform: capitalize;
@@ -185,7 +185,7 @@
     /* text-transform: capitalize; */
     letter-spacing: 0.5px;
     color: black;
-    font-size: 20px;
+    font-size: 17px;
     line-height: 20px;
     word-break: break-word;
 } 
