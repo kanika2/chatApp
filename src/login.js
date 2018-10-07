@@ -45,7 +45,7 @@ class Login extends Component {
             authorMail : this.props.user.email,
             authorPhoto : this.props.user.providerData[0].photoURL,
             typing: false,
-            online: false
+            online: false,
         }
         this.state.database.ref("/Users").push(users);
     }

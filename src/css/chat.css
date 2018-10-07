@@ -118,7 +118,7 @@
     padding-top: 75px;
     overflow-y: scroll;
     position: relative;
-    padding-bottom: 80px;
+    padding-bottom: 100px;
 }
 
 .chatLogAuthor {
@@ -126,7 +126,7 @@
     display: inline-block;
     max-width: 80%;
     border-radius: 50px;
-    border-top-right-radius: 0px;
+    border-top-right-radius: 2px;
     margin-bottom: 10px;
     outline: none;
     border: none;
@@ -138,7 +138,7 @@
     display: inline-block;
     max-width: 80%;
     border-radius: 50px;
-    border-top-left-radius: 0px;
+    border-top-left-radius: 2px;
     margin-bottom: 10px;
     outline: none;
     border: none;
@@ -150,12 +150,11 @@
     position: relative;
     /* background: green; */
     margin-bottom: 0px; 
-    margin: 0px 10px;
+    margin: 5px 10px 0;
     font-size: 16px;
     font-weight: bold;
-    font-family: 'Acme', sans-serif;
+    font-family: 'Source Code Pro', sans-serif;
     text-transform: capitalize;
-    letter-spacing: 1.5px;
     color: white;
     border: none;
     outline: none;
@@ -245,4 +244,118 @@
 
 .writeMessage button {
     float: right;
+}
+
+.fa-check,
+.fa-check-double {
+    font-size: 11px;
+    position: relative;
+    margin-left: 10px;
+    margin-right: 5px;
+    top: 6px;
+    color: #555;
+}
+
+.fa-check-double.green {
+    color: #cdea00;
+}
+
+.msgMetaData {
+    float: right;
+}
+
+.time {
+    font-size: 11px;
+    position: relative;
+    top: 6px;
+    color: #444;
+    font-weight: 600;
+    margin-left: 10px;
+    font-family: "Source Code Pro", sans-serif;
+}
+
+.date {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.date span {
+    background: rgba(255,255,255,0.85);
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-family: "Source Code Pro", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+}
+
+.embededMsg {
+    background: rgba(0,0,0,0.2);
+    margin-bottom: 7px;
+}
+
+.embededMsg {
+    margin-left: -25px;
+    margin-right: -14px;
+    padding: 7px 10px 1px;
+}
+
+
+.embededAuthor {
+    font-size: 13px;
+    font-family: "Source Code Pro", sans-serif;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.embededBody {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.replyButtonRight,
+.replyButtonLeft {
+    background: none;
+    border: none;
+    outline: none;
+    display: none;
+    float: right;
+}
+
+.chatLogWrapper:hover .replyButtonRight,
+.chatLog:hover .replyButtonLeft {
+    display: block;
+}
+
+.replyButtonRight .fa-reply {
+    font-size: 12px;
+    position: absolute;
+    top: 1px;
+    right: -3px;
+    color: #555;
+}
+
+.replyButtonLeft .fa-reply {
+    font-size: 12px;
+    position: absolute;
+    top: 2px;
+    right: 15px;
+    color: #e1e1e1;
+}
+
+.closeReply {
+    text-align: right;
+}
+
+.closeReply button {
+    background: none;
+    border: none;
+    outline: none;
+    display: inline-block;
+    float: none;
+}
+
+.closeReply .fa-times {
+    color: #fff;
 }
