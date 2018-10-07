@@ -135,7 +135,7 @@ export default class ChatApp extends Component {
       }
   });
   this.setState({readInitial: false});
-}
+  }
 
   render() {
     return (

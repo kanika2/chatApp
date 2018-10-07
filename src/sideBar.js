@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import "./css/sideBar.css";
+import fire from './fire';
 
 export default class SideBar extends Component {
     constructor(props) {
@@ -14,9 +15,25 @@ export default class SideBar extends Component {
             userImage: "url('"+user.providerData[0].photoURL+"')",
             userName : user.displayName,
             activeUsers,
+            database : fire.database(),
         }
+        this.readUserDatabase();
         // console.log(this.state.userName);
     }
+
+    readUserDatabase = ()=> {
+        this.state.database.ref("/Users").on("value", (chatValue) => {
+            var chatter = chatValue.val();
+            let activeUsers = [];
+            // console.log(chatter);
+            for (let key in chatter){
+                // copying data from database to array of object
+                // console.log(chatter[key]);
+                activeUsers.push(chatter[key]);
+            }
+            this.setState({activeUsers})
+        });
+      }
 
     render() {
         let authorPhoto = "";
