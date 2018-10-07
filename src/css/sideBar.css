@@ -104,3 +104,23 @@
     text-transform: capitalize;
     line-height: 25px;
 }
+
+.onlineMark {
+    position: absolute;
+    bottom: 9px;
+    right: -4px;
+    height: 12px;
+    width: 12px;
+    background: #09bf09;
+    border-radius: 50%;
+}
+
+.offlineMark {
+    position: absolute;
+    bottom: 9px;
+    right: -4px;
+    height: 12px;
+    width: 12px;
+    border: 2px solid red;
+    border-radius: 50%;
+}

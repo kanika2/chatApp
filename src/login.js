@@ -34,6 +34,7 @@ class Login extends Component {
                 this.setState({buttonValue : "Sign In"});
             }
             this.setState({loading: false});
+            this.readUserDatabase();
         });
 
     }
@@ -44,14 +45,16 @@ class Login extends Component {
             author: this.props.user.displayName,
             authorMail : this.props.user.email,
             authorPhoto : this.props.user.providerData[0].photoURL,
-            typing: false
+            typing: false,
+            online: false
         }
         this.state.database.ref("/Users").push(users);
     }
 
     readUserDatabase = ()=> {
-        this.state.database.ref("/Users").once("value", (chatValue) => {
+         this.state.database.ref("/Users").once("value", (chatValue) => {
             var chatter = chatValue.val(); 
+            console.log("chatter in loign", chatter);
             if (chatter === null) {
                 this.sendUserDatabse();
                 console.log("data send");
@@ -74,6 +77,9 @@ class Login extends Component {
                     userArray.push({
                         author: this.props.user.displayName,
                         authorMail : this.props.user.email,
+                        authorPhoto : this.props.user.providerData[0].photoURL,
+                        typing: false,
+                        online: false
             
                     })
                     this.sendUserDatabse();
@@ -82,7 +88,7 @@ class Login extends Component {
                 localStorage.setItem('userArray', userArray);
             }  
             // console.log(this.state.userList);
-            window.location.assign("/chat");
+            // window.location.assign("/chat");
         });    
     }
 

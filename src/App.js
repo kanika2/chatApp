@@ -43,6 +43,8 @@ export default class ChatApp extends Component {
   componentDidMount() {
     this.readMessage();
     this.typingStatusCheck();
+    window.addEventListener("beforeunload", this.onUnload)
+    console.log("added event listener")
     // console.log(this.props);
     let user  = localStorage.getItem('user');
     if(user) {
@@ -50,7 +52,13 @@ export default class ChatApp extends Component {
       console.log(user);
     }
     this.setState({user});
+
     //console.log("did mount");
+  }
+
+  onUnload(event) { // the method that will be used for both add and remove event
+      console.log("hellooww")
+      event.returnValue = "Hellooww"
   }
 
   notifyMe = (msg)=> {
@@ -136,6 +144,8 @@ export default class ChatApp extends Component {
   });
   this.setState({readInitial: false});
   }
+
+  
 
   render() {
     return (
