@@ -72,9 +72,11 @@ export default class SideBar extends Component {
                             console.log("bhai tru ho gya");
                             this.state.database.ref("/Users/"+activeUsers[i].key+"/online").set(true);
                             this.setState({userKey: activeUsers[i].key});
+                            this.props.setUserKey(activeUsers[i].key);
                             break;
                         }
                         this.setState({userKey: activeUsers[i].key});
+                        this.props.setUserKey(activeUsers[i].key);
                     }
                 }
         });

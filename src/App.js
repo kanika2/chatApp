@@ -24,6 +24,8 @@ export default class ChatApp extends Component {
       user: {
         providerData: [""]
       },
+      typingList : [],
+      userKey: "",
       readInitial: true,
       typing: false,
       database : fire.database(),
@@ -78,6 +80,11 @@ export default class ChatApp extends Component {
   
   }
 
+  setUserKey = (userKey) => {
+    console.log("in set user key , app", userKey);
+    this.setState({userKey});
+  }
+
   handlechange= e => {
     let input = e.target.value;
     //console.log(input);
@@ -109,19 +116,29 @@ export default class ChatApp extends Component {
          clearTimeout(timeoutcount);
        }
       timer = false;
-       this.state.database.ref("/typing").set(true)
+      this.state.database.ref("/Users/"+this.state.userKey+"/typing").set(true);
      } else {
        if(!timer) {
         timer = true;
        }
-       timeoutcount = setTimeout(()=>{this.state.database.ref("/typing").set(false)}, 2000);
+       timeoutcount = setTimeout(()=>{this.state.database.ref("/Users/"+this.state.userKey+"/typing").set(false);}, 2000);
      }
   }
   typingStatusCheck = ()=> {
-    this.state.database.ref("/typing").on("value", (status) => {
-      let typing = status.val();
-      console.log(typing);
-      this.setState({typing});
+      this.state.database.ref("/Users").on("value", (status) => {
+        let userList = status.val();
+        let typingList = [];
+        for (let key in userList){
+            if(userList[key].author!=undefined) {
+              if(userList[key].authorMail != this.state.user.email ) {
+                if(userList[key].typing) {
+                  typingList.push(userList[key].author);
+                }
+              }
+          }
+      }
+      console.log(typingList);
+      this.setState({typingList});
     });
   }
 
@@ -158,14 +175,17 @@ export default class ChatApp extends Component {
             <div className="leftSide col-sm-3">
               <div className="sidebarWrapper">
                 {/* {console.log(this.state.user)} */}
-                <SideBar />
+                <SideBar setUserKey={this.setUserKey} />
               </div>
             </div>
             <div className="chattingArea col-sm-9">
             <div className="chatBar">
               <ul>
-                { this.state.typing ?
-                <li className="typingStatus"><span>typing...</span></li>
+                { this.state.typingList.length != 0 ?
+                  this.state.typingList.length > 1 ?
+                  <li className="typingStatus">
+                  {this.state.typingList.map((value, index)=>{return <span>{value}{this.state.typingList.length == index+1 ? <span></span> : <span>,</span> }  </span>})} are typing...</li>
+                  : <li className="typingStatus"><span>{this.state.typingList[0]} is typing...</span></li>
                 : <li></li>
                 }
                 {/* <li><i className="fas fa-ellipsis-v"></i></li>
