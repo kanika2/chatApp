@@ -34,7 +34,6 @@ class Login extends Component {
                 this.setState({buttonValue : "Sign In"});
             }
             this.setState({loading: false});
-            this.readUserDatabase();
         });
 
     }
