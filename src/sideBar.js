@@ -18,6 +18,9 @@ export default class SideBar extends Component {
             userKey : "",
             activeUsers,
             database : fire.database(),
+            searchUser : false,
+            searchValue : "",
+            searchResult : []
         }
         this.readUserDatabase(user);
         this.setOnlineFunc(user);
@@ -44,6 +47,7 @@ export default class SideBar extends Component {
             }
             this.setState({activeUsers});
             console.log(activeUsers);
+            this.props.setActiveUserLength(activeUsers.length);
         });
       }
 
@@ -91,6 +95,26 @@ export default class SideBar extends Component {
         this.state.database.ref("/Users/"+this.state.userKey+"/online").set(false);
       }
 
+      searchHandle = (searchSubString) => {
+        searchSubString = searchSubString.toLowerCase();
+        console.log("1");
+        if(searchSubString == "") {
+            console.log("2");
+            this.setState({searchUser: false});
+        } else {
+            console.log("3");
+            let temp = [];
+            let author = "";
+            this.state.activeUsers.map((value)=>{
+                author = value.author.toLowerCase();
+                if(author.includes(searchSubString)) {
+                    temp.push(value);
+                }
+            });
+            this.setState({searchUser: true, searchResult: temp});
+        }
+      }
+
     render() {
         let authorPhoto = "";
         return(
@@ -110,11 +134,12 @@ export default class SideBar extends Component {
                     </div>
                 </div>
                 <div className="search">
-                    <input className="inputSearch" type="text" placeholder="Search"/>
+                    <input className="inputSearch" onChange={(e)=>{let val = e.target.value;  this.setState({searchValue: val}); this.searchHandle(e.target.value);}} value={this.state.searchValue} type="text" placeholder="Search"/>
                     <i className="fas fa-search search-icon"></i>
                 </div>
                 <div className="user">
-                    {this.state.activeUsers.map((value, index)=>{
+                {this.state.searchUser===false ?
+                    this.state.activeUsers.map((value, index)=>{
                         return(
                             <div key= {index} className="activeUser row">
                                 <div className="col-sm-2">
@@ -127,11 +152,25 @@ export default class SideBar extends Component {
                                 </div>
                             </div>
                         );
-                    })}
+                    }) : 
+                    this.state.searchResult.map((value, index)=>{
+                        return(
+                            <div key= {index} className="activeUser row">
+                                <div className="col-sm-2">
+                                    <span style={{display: "none"}}>{value.authorPhoto ? authorPhoto = "url('"+value.authorPhoto+"')" : authorPhoto = 'url("https://www.squ.edu.om/Portals/85/user_icon.png")'}</span>
+                                    <div className="userPhoto" style={{backgroundImage: authorPhoto}}></div>
+                                    <div className={value.online ? "onlineMark" : "offlineMark"}></div>
+                                </div>
+                                <div className="col-sm-10">
+                                    <p>{value.author}</p>
+                                </div>
+                            </div>
+                        );
+                    })
+                }
                 </div>
             </div>
-
-      </Beforeunload>
+            </Beforeunload>
         );
     }
 }

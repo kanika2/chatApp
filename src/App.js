@@ -9,6 +9,7 @@ import './css/chat.css';
 import fire from './fire';
 import TextField from '@material-ui/core/TextField';
 import SideBar from "./sideBar";
+import moment from 'moment';
 
 var timer;
 var timeoutcount;
@@ -16,7 +17,6 @@ var timeoutcount;
 export default class ChatApp extends Component {
   constructor(props) {
     super(props);
-    // console.log();
     this.state = {
       message : "",
       display : "",
@@ -26,9 +26,13 @@ export default class ChatApp extends Component {
       },
       typingList : [],
       userKey: "",
+      activeUserLength: 0,
       readInitial: true,
       typing: false,
       database : fire.database(),
+      replyKey: false,
+      replyAuthor: "null",
+      replyBody: "null"
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -40,6 +44,14 @@ export default class ChatApp extends Component {
       if (Notification.permission !== "granted")
         Notification.requestPermission();
     });
+
+    window.onblur = ()=> {
+      console.log('working');
+    }
+    window.onfocus = () => {
+      console.log('working 2');
+      this.markReadFunc();
+    }
   }
 
   componentDidMount() {
@@ -96,7 +108,9 @@ export default class ChatApp extends Component {
     let sendMessage  = this.state.message;
     console.log(sendMessage);
     this.setState({message:""})
-    this.sendMessageDatabase();
+    if(sendMessage!="") {
+      this.sendMessageDatabase();
+    }
   }
 
   sendMessageDatabase = ()=> {
@@ -104,9 +118,16 @@ export default class ChatApp extends Component {
     var message = this.state.message;
     var data = {
         author: this.state.user.displayName,
-        body: message
+        body: message,
+        deliveredTo: [this.state.user.displayName],
+        readBy: [this.state.user.displayName],
+        time: moment().toDate().toISOString(),
+        embedded: this.state.replyKey,
+        embeddedAuthor: this.state.replyAuthor,
+        embeddedBody : this.state.replyBody
     }
     this.state.database.ref("/msg").push(data);
+    this.setState({replyKey: false});
   }
 
   typingStatusUpdate = (checkTyping) => {
@@ -144,22 +165,122 @@ export default class ChatApp extends Component {
 
   readMessage = ()=> {
     this.state.database.ref("/msg").on("value", (message) => {
+      let keyToUpdateDelivered = [];
+      let valueToUpdate = [];
       let dataArray = [];
       var messages = message.val();
+      let temp = {};
       for(let key in messages) {
-        dataArray.push(messages[key]);
+        temp = messages[key];
+        temp.deliveredToAll = false;
+        temp.readByAll = false;
+        temp.key = key;
+        dataArray.push(temp);
       }
+      console.log(dataArray);
+      dataArray.map((value, index)=> {
+        let deliveredToCheck = false;
+        dataArray[index].date = moment(value.time).toDate().getDate()+"/"+(moment(value.time).toDate().getMonth()+1)+"/"+moment(value.time).toDate().getFullYear();
+        dataArray[index].time = ('0' + moment(value.time).toDate().getHours()).slice(-2)+":"+('0' + moment(value.time).toDate().getMinutes()).slice(-2);
+        value.deliveredTo.map((data, i) => {
+          if(data==this.state.user.displayName) {
+            deliveredToCheck = true;
+          }
+        });
+        let newValue = [];
+        if(!deliveredToCheck) {
+          console.log("delivered updated");
+          dataArray[index].deliveredTo.push(this.state.user.displayName);
+          newValue = dataArray[index].deliveredTo;
+          keyToUpdateDelivered.push(value.key);
+          valueToUpdate.push(newValue);
+        }
+        console.log("d key", keyToUpdateDelivered);
+      });
+      console.log(this.state);
+      dataArray.map((value, index)=>{
+        if(value.deliveredTo != undefined) {
+          if(value.deliveredTo.length == this.state.activeUserLength) {
+            console.log("delivered to all true h re");
+            dataArray[index].deliveredToAll = true;
+          }
+        }
+        if(value.readBy != undefined) {
+          console.log('readby length', value.readBy.length);
+          if(value.readBy.length == this.state.activeUserLength) {
+            dataArray[index].readByAll = true;
+          }
+        }
+      })
+      console.log(this.state);
+      console.log(dataArray);
       this.setState({messageArray : dataArray});
       var elem = document.getElementsByClassName('chatBox');
       elem[0].scrollTop = elem[0].scrollHeight;
       if(!this.state.readInitial) {
+        if(dataArray.length!=0) {
         let msgObj = dataArray[dataArray.length-1];
         let check = (msgObj.author).toLowerCase() != (this.state.user.displayName).toLowerCase();
         console.log(check);
         check ? this.notifyMe(msgObj) : {}
       }
+    }
+    console.log("deliverd key", keyToUpdateDelivered);
+    keyToUpdateDelivered.map((value, index)=> {
+      console.log("deliver key", value);
+      this.state.database.ref("/msg/"+value+"/deliveredTo").set(valueToUpdate[index]);
+    });
+
   });
   this.setState({readInitial: false});
+  this.markReadFunc();
+  }
+
+  markReadFunc = ()=> {
+    this.state.database.ref("/msg").once("value", (message) => {
+      let keyToUpdateReadBy = [];
+      let valueToUpdate = [];
+      let dataArray = [];
+      var messages = message.val();
+      let temp = {};
+      for(let key in messages) {
+        temp = messages[key];
+        temp.deliveredToAll = false;
+        temp.readByAll = false;
+        temp.key = key;
+        dataArray.push(temp);
+      }
+      console.log(dataArray);
+      dataArray.map((value, index)=> {
+        let readByCheck = false;
+        value.readBy.map((data, i) => {
+          if(data==this.state.user.displayName) {
+            readByCheck = true;
+          }
+        });
+        let newValue = [];
+        if(!readByCheck) {
+          dataArray[index].readBy.push(this.state.user.displayName);
+          newValue = dataArray[index].readBy;
+          keyToUpdateReadBy.push(value.key);
+          valueToUpdate.push(newValue);
+          console.log("key to update", value.key);
+        }
+      });
+      console.log(dataArray);
+      keyToUpdateReadBy.map((value, index)=> {
+        this.state.database.ref("/msg/"+value+"/readBy").set(valueToUpdate[index]);
+      });
+  });
+  }
+
+  setReplyFunc = (author, body)=> {
+    this.setState({replyKey: true, replyAuthor: author, replyBody: body});
+  }
+
+  setActiveUserLength = length => {
+    console.log("length", length);
+    this.setState({activeUserLength: length});
   }
 
   
@@ -175,7 +296,7 @@ export default class ChatApp extends Component {
             <div className="leftSide col-sm-3">
               <div className="sidebarWrapper">
                 {/* {console.log(this.state.user)} */}
-                <SideBar setUserKey={this.setUserKey} />
+                <SideBar setUserKey={this.setUserKey} setActiveUserLength={this.setActiveUserLength} />
               </div>
             </div>
             <div className="chattingArea col-sm-9">
@@ -196,16 +317,58 @@ export default class ChatApp extends Component {
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
                 return (
+                  <div>
+                  {index!=0 ? this.state.messageArray[index-1].date != this.state.messageArray[index].date ? <p className="date"><span>{value.date}</span></p> : <p></p> : <p className="date"><span>{value.date}</span></p>}
+                  {value.embedded===false ? 
                   <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
                     <div className={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
-                      <p className="chatAuthor">{value.author}</p><br/>
-                      <p className="chatMessage">{value.body}</p>
+                      <p className="chatAuthor">{value.author} <button className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "replyButtonRight" : "replyButtonLeft"} onClick={()=>{this.setReplyFunc(value.author, value.body)}}><i class="fas fa-reply"></i></button></p><br/>
+                      {value.readByAll ? 
+                        <p className="chatMessage">{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check-double green"></i></span> : <i></i> } </p>
+                      :
+                        value.deliveredToAll ? 
+                        <p className="chatMessage">{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check-double"></i></span> : <i></i> } </p> 
+                        :
+                        <p className="chatMessage">{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check"></i></span> : <i></i> } </p>
+                      }
                     </div>
+                  </div> : 
+                  <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
+                  <div className={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
+                    <p className="chatAuthor">{value.author} <button className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "replyButtonRight" : "replyButtonLeft"} onClick={()=>{this.setReplyFunc(value.author, value.body)}}><i class="fas fa-reply"></i></button></p><br/>
+                    <p className="chatMessage">
+                    <div className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "embededMsg self" : "embededMsg other"}>
+                        <p className="embededAuthor">{value.embeddedAuthor}</p>
+                        <p className="embededBody">{value.embeddedBody}</p>
+                      </div>
+                    {value.readByAll ? 
+                      <span>{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check-double green"></i></span> : <i></i> } </span>
+                    :
+                      value.deliveredToAll ? 
+                      <span>{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check-double"></i></span> : <i></i> } </span> 
+                      :
+                      <span>{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check"></i></span> : <i></i> } </span>
+                    }
+                    </p>
+                  </div>
+                </div>
+                  }
                   </div>
                 );
               })}
               </div>
               <div className="writeMessage">
+              {this.state.replyKey ? 
+              <div>
+              <p className="closeReply"><button onClick={()=>{this.setState({replyKey: false})}}><i className="fas fa-times"></i></button></p>
+                <div className="chatLogWrapper" style={ (this.state.replyAuthor).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
+                  <div className={(this.state.replyAuthor).toLowerCase() === (this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"}>
+                    <p className="chatAuthor">{this.state.replyAuthor}</p><br/>
+                      <p className="chatMessage">{this.state.replyBody}</p>
+                  </div>
+                </div>
+                </div>
+              : <p></p>}
                 <input className="text"  onKeyDown={()=>{this.typingStatusUpdate(true)}} onKeyUp={()=>{this.typingStatusUpdate(false)}} placeholder="Write Your Text" type="text" onChange = {this.handlechange} onKeyDown={()=>{this.typingStatusUpdate(true)}} value={this.state.message}/>
                 <i className="fas fa-grin-hearts hearts"></i>
                 <i  onClick = {this.sendButton } className="fas fa-location-arrow send"></i>
