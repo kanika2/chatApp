@@ -12,6 +12,7 @@ import {counterReducer} from "./reducers/reducer";
 import ChatApp from './App';
 import Login from './login';
 import Boot from "./gridCheck";
+import ChatRooms from "./component/chatRoom";
 
 //import Lifecycle from './reactlifecycle';
 
@@ -28,8 +29,9 @@ const appRoute = (
         <Router>
             <div>
                 <Route exact path="/" component = {Login} />
-                <Route exact path="/Chat" component = {ChatApp} />
+                <Route exact path="/chat/:chatName" component = {ChatApp} />
                 <Route exact path="/boot" component = {Boot} />
+                <Route exact path="/chatrooms" component = {ChatRooms} />
             </div>
         </Router>
     </Provider>

@@ -117,18 +117,24 @@ export default class SideBar extends Component {
 
     render() {
         let authorPhoto = "";
+        console.log(this.props);
         return(
 
       <Beforeunload onBeforeunload={() => {this.offlineFunc();}}>
             <div>
                 <div className="nav">
                     <div className="row">
-                        <div className="col-sm-4">
+                        {/* <div className="col-sm-4">
                             <div className="photo" style={{backgroundImage: this.state.userImage}}></div>
                         </div>
                         <div className="col-sm-8">
                             <ul>
                                 <li><p>{this.state.userName}</p></li>
+                            </ul>
+                        </div> */}
+                        <div className="col-sm-12">
+                            <ul>
+                                <li><p>{this.props.chatRoomName}</p></li>
                             </ul>
                         </div>
                     </div>

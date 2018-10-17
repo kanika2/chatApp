@@ -104,6 +104,33 @@
     font-family: "Source Code Pro", sans-serif;
     font-weight: 600;
     outline: none;
+    margin-left: 5px;
+}
+
+.logoutButton button .fa-plus {
+    font-size: 14px;
+}
+
+.addMemberInput {
+    text-align: center;
+    padding: 7px;
+    display: none;
+}
+
+.addMemberInput input {
+    width: 50%;
+    padding: 7px 12px;
+    border: none;
+    outline: none;
+    border-radius: 15px;
+}
+
+.addMemberInput button {
+    padding: 7px 12px;
+    border: none;
+    outline: none;
+    border-radius: 15px;
+    margin-left: 10px;
 }
 
 .chatBar ul li i {

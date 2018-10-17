@@ -32,7 +32,9 @@ export default class ChatApp extends Component {
       database : fire.database(),
       replyKey: false,
       replyAuthor: "null",
-      replyBody: "null"
+      replyBody: "null",
+      allChatRoom: [],
+      adminCheck: false
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -66,6 +68,37 @@ export default class ChatApp extends Component {
       console.log(user);
     }
     this.setState({user});
+    this.state.database.ref("/chatRooms").once("value", (allChatRoom) => {
+      if(!allChatRoom.val())
+          allChatRoom = [];
+      else 
+          allChatRoom = allChatRoom.val();
+          let tempChatRoom = [];
+          let key;
+          let tempName = "";
+          let key2 = "";
+          for(key in allChatRoom) {
+            tempChatRoom.push(allChatRoom[key]);
+          }
+          tempChatRoom.map((value)=>{
+            console.log("tempName 0: ", value);
+            tempName = Object.keys(value)[0];
+            console.log("tempName 1: ", tempName);
+            if(this.props.match.params.chatName == tempName) {
+              tempName = value[tempName].admin;
+              console.log("tempName 2: ", tempName);
+              for(key2 in tempName) {
+                console.log("tempName 3: ", tempName[key2]);
+                if(this.state.user.email === tempName[key2]) {
+                  this.setState({adminCheck: true});
+                  console.log("admin check ", true);
+                }
+              }
+            }
+            
+          });
+      this.setState({allChatRoom: tempChatRoom});
+  });
 
     //console.log("did mount");
   }
@@ -201,7 +234,6 @@ export default class ChatApp extends Component {
       dataArray.map((value, index)=>{
         if(value.deliveredTo != undefined) {
           if(value.deliveredTo.length == this.state.activeUserLength) {
-            console.log("delivered to all true h re");
             dataArray[index].deliveredToAll = true;
           }
         }
@@ -283,11 +315,14 @@ export default class ChatApp extends Component {
     this.setState({activeUserLength: length});
   }
 
-  
+  addMemeberHandle = ()=> {
+
+  }
 
   render() {
     return (
       <div className="App">
+      {/* <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> */}
         <div className="background">
               <h2 className="chatAppTitle">The ChatApp</h2>
         </div>
@@ -296,7 +331,7 @@ export default class ChatApp extends Component {
             <div className="leftSide col-sm-3">
               <div className="sidebarWrapper">
                 {/* {console.log(this.state.user)} */}
-                <SideBar setUserKey={this.setUserKey} setActiveUserLength={this.setActiveUserLength} />
+                <SideBar setUserKey={this.setUserKey} setActiveUserLength={this.setActiveUserLength} chatRoomName={this.props.match.params.chatName}/>
               </div>
             </div>
             <div className="chattingArea col-sm-9">
@@ -309,11 +344,20 @@ export default class ChatApp extends Component {
                   : <li className="typingStatus"><span>{this.state.typingList[0]} is typing...</span></li>
                 : <li></li>
                 }
-                {/* <li><i className="fas fa-ellipsis-v"></i></li>
-                <li><i className="fas fa-comment-alt"></i></li>
-                <li><i className="fas fa-paperclip"></i></li> */}
+                {this.state.adminCheck ?
+                <li className="logoutButton"><button onClick={()=>{this.addMemeberHandle()}}><i className="fas fa-plus"></i> Add Member</button></li>
+                : <li></li>}
                 <li className="logoutButton"><button onClick={()=>{window.location.assign("/")}}>Leave Chat</button></li>
               </ul>
+
+
+              {/* Send email to join ChatRoom */}
+              <div className="addMemberInput">
+                <input type="email" placeholder="enter member google email here..."/>
+                <button><i className="fas fa-envelope"></i></button>
+              </div>
+
+              
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
                 return (
@@ -322,7 +366,7 @@ export default class ChatApp extends Component {
                   {value.embedded===false ? 
                   <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
                     <div className={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
-                      <p className="chatAuthor">{value.author} <button className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "replyButtonRight" : "replyButtonLeft"} onClick={()=>{this.setReplyFunc(value.author, value.body)}}><i class="fas fa-reply"></i></button></p><br/>
+                      <p className="chatAuthor">{value.author} <button className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "replyButtonRight" : "replyButtonLeft"} onClick={()=>{this.setReplyFunc(value.author, value.body)}}><i className="fas fa-reply"></i></button></p><br/>
                       {value.readByAll ? 
                         <p className="chatMessage">{value.body} {(value.author).toLowerCase() === (this.state.user.displayName).toLowerCase() ? <span className="msgMetaData"><span className="time">{value.time}</span><i className="fas fa-check-double green"></i></span> : <i></i> } </p>
                       :
@@ -335,7 +379,7 @@ export default class ChatApp extends Component {
                   </div> : 
                   <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>
                   <div className={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "chatLogAuthor" : "chatLog"} key ={index}>
-                    <p className="chatAuthor">{value.author} <button className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "replyButtonRight" : "replyButtonLeft"} onClick={()=>{this.setReplyFunc(value.author, value.body)}}><i class="fas fa-reply"></i></button></p><br/>
+                    <p className="chatAuthor">{value.author} <button className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "replyButtonRight" : "replyButtonLeft"} onClick={()=>{this.setReplyFunc(value.author, value.body)}}><i className="fas fa-reply"></i></button></p><br/>
                     <p className="chatMessage">
                     <div className={(value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? "embededMsg self" : "embededMsg other"}>
                         <p className="embededAuthor">{value.embeddedAuthor}</p>
