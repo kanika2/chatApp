@@ -11,6 +11,7 @@ export default class ChatRooms extends Component {
 
         this.state = {
             loading: true,
+            loadingChatRoom: true,
             chatRoomName: "",
             chatRooms: ["School Masti", "Anant's B'day"],
             database : fire.database(),
@@ -28,14 +29,19 @@ export default class ChatRooms extends Component {
             user = JSON.parse(user);
             console.log(user);
         }
-        this.setState({user});
+        let allChatRoomTemp = [];
         this.state.database.ref("/chatRooms").once("value", (allChatRoom) => {
             if(!allChatRoom.val())
                 allChatRoom = [];
-            else 
+            else {
                 allChatRoom = allChatRoom.val();
-            this.setState({allChatRoom});
+                for(let key in allChatRoom) 
+                    allChatRoomTemp.push(allChatRoom[key]);
+                allChatRoom = allChatRoomTemp;
+            }
+            this.setState({allChatRoom, loadingChatRoom: false});
         });
+        this.setState({user});
     }
 
     createChatRoomHandle = ()=> {
@@ -76,12 +82,19 @@ export default class ChatRooms extends Component {
                         <h4 className="chatRoomTitle">Your Chat Rooms</h4>
                         {this.state.loading ? <div style={{height: "200px", width: "200px", margin: "auto", backgroundRepeat: "no-repeat", "backgroundImage" : "url('http://www.dariusland.com/images/load.gif')", backgroundSize : "contain"}}></div> :
                             <div className="chatRoomList">
-                                {
-                                 this.state.chatRooms.length == 0 ? <a className="noChatRoom">You are not connected to any chat room yet.</a> :
-                                 this.state.chatRooms.map((value)=>{
-                                        return (<a href="#" className="chatRoomLink"><i className="fas fa-user-friends"></i>{value}</a>)
+                            {
+                                this.state.loadingChatRoom ? <div style={{height: "30px", width: "30px", margin: "auto", backgroundRepeat: "no-repeat", "backgroundImage" : "url('http://www.dariusland.com/images/load.gif')", backgroundSize : "contain"}}></div> : 
+
+                            
+                                
+                                 this.state.allChatRoom.length == 0 ? <a className="noChatRoom">You are not connected to any chat room yet.</a> :
+                                 this.state.allChatRoom.map((value)=>{
+                                        let chRoom = Object.keys(value)[0];
+                                        return (<a href={"/chat/"+chRoom} className="chatRoomLink"><i className="fas fa-user-friends"></i>{chRoom}</a>)
                                 })
-                                }
+
+                            
+                        }
                             </div>
                         }
                     </div>

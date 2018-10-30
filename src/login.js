@@ -16,7 +16,9 @@ class Login extends Component {
             userImage: "",
             buttonValue : "Sign In",
             database : fire.database(),
-            loading: true
+            loading: true,
+            chatRoomKey: "",
+
         }
     }
 
@@ -35,7 +37,6 @@ class Login extends Component {
             }
             this.setState({loading: false});
         });
-
     }
 
     sendUserDatabse = () => {
@@ -156,7 +157,7 @@ class Login extends Component {
                                 <div className="userName">
                                     <h2>{this.state.user.displayName}</h2>
                                 </div>
-                                <button className="goToChatButton" onClick={()=> {window.location.assign("/chat")}}>Go to chat</button>
+                                <button className="goToChatButton" onClick={()=> {window.location.assign("/chatrooms")}}>Go to Chatroom</button>
                                 <button className="signInButton" onClick={this.authHandle}><p>{this.state.buttonValue}</p></button>
                             </div>
                         </div>

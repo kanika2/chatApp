@@ -34,7 +34,8 @@ export default class ChatApp extends Component {
       replyAuthor: "null",
       replyBody: "null",
       allChatRoom: [],
-      adminCheck: false
+      adminCheck: false,
+      chatRoomKey: ""
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -57,7 +58,7 @@ export default class ChatApp extends Component {
   }
 
   componentDidMount() {
-    this.readMessage();
+    setTimeout(()=>{this.readMessage();}, 3000);
     this.typingStatusCheck();
     window.addEventListener("beforeunload", this.onUnload)
     console.log("added event listener")
@@ -77,15 +78,21 @@ export default class ChatApp extends Component {
           let key;
           let tempName = "";
           let key2 = "";
+          let tempData = {};
           for(key in allChatRoom) {
-            tempChatRoom.push(allChatRoom[key]);
+            tempData = {
+              key,
+              data : allChatRoom[key]
+            }
+            tempChatRoom.push(tempData);
           }
           tempChatRoom.map((value)=>{
-            console.log("tempName 0: ", value);
-            tempName = Object.keys(value)[0];
+            console.log("tempName 0: ", value.data);
+            tempName = Object.keys(value.data)[0];
             console.log("tempName 1: ", tempName);
             if(this.props.match.params.chatName == tempName) {
-              tempName = value[tempName].admin;
+              this.setState({chatRoomKey: value.key});
+              tempName = value.data[tempName].admin;
               console.log("tempName 2: ", tempName);
               for(key2 in tempName) {
                 console.log("tempName 3: ", tempName[key2]);
@@ -159,7 +166,7 @@ export default class ChatApp extends Component {
         embeddedAuthor: this.state.replyAuthor,
         embeddedBody : this.state.replyBody
     }
-    this.state.database.ref("/msg").push(data);
+    this.state.database.ref("/chatRooms/"+this.state.chatRoomKey+"/"+this.props.match.params.chatName+"/msg").push(data);
     this.setState({replyKey: false});
   }
 
@@ -197,7 +204,7 @@ export default class ChatApp extends Component {
   }
 
   readMessage = ()=> {
-    this.state.database.ref("/msg").on("value", (message) => {
+    this.state.database.ref("/chatRooms/"+this.state.chatRoomKey+"/"+this.props.match.params.chatName+"/msg").on("value", (message) => {
       let keyToUpdateDelivered = [];
       let valueToUpdate = [];
       let dataArray = [];
@@ -260,7 +267,7 @@ export default class ChatApp extends Component {
     console.log("deliverd key", keyToUpdateDelivered);
     keyToUpdateDelivered.map((value, index)=> {
       console.log("deliver key", value);
-      this.state.database.ref("/msg/"+value+"/deliveredTo").set(valueToUpdate[index]);
+      this.state.database.ref("/chatRooms/"+this.state.chatRoomKey+"/"+this.props.match.params.chatName+"/msg/"+value+"/deliveredTo").set(valueToUpdate[index]);
     });
 
   });
@@ -269,7 +276,7 @@ export default class ChatApp extends Component {
   }
 
   markReadFunc = ()=> {
-    this.state.database.ref("/msg").once("value", (message) => {
+    this.state.database.ref("/chatRooms/"+this.state.chatRoomKey+"/"+this.props.match.params.chatName+"/msg").once("value", (message) => {
       let keyToUpdateReadBy = [];
       let valueToUpdate = [];
       let dataArray = [];
@@ -301,7 +308,7 @@ export default class ChatApp extends Component {
       });
       console.log(dataArray);
       keyToUpdateReadBy.map((value, index)=> {
-        this.state.database.ref("/msg/"+value+"/readBy").set(valueToUpdate[index]);
+        this.state.database.ref("/chatRooms/"+this.state.chatRoomKey+"/"+this.props.match.params.chatName+"/msg/"+value+"/readBy").set(valueToUpdate[index]);
       });
   });
   }
@@ -344,10 +351,11 @@ export default class ChatApp extends Component {
                   : <li className="typingStatus"><span>{this.state.typingList[0]} is typing...</span></li>
                 : <li></li>
                 }
-                {this.state.adminCheck ?
-                <li className="logoutButton"><button onClick={()=>{this.addMemeberHandle()}}><i className="fas fa-plus"></i> Add Member</button></li>
+                {!this.state.adminCheck ?
+                <li></li>
+                // <li className="logoutButton"><button onClick={()=>{this.addMemeberHandle()}}><i className="fas fa-plus"></i> Add Member</button></li>
                 : <li></li>}
-                <li className="logoutButton"><button onClick={()=>{window.location.assign("/")}}>Leave Chat</button></li>
+                <li className="logoutButton"><button onClick={()=>{window.location.assign("/chatrooms")}}>Leave Chat</button></li>
               </ul>
 
 
@@ -361,7 +369,7 @@ export default class ChatApp extends Component {
             </div>
               <div className="chatBox">{this.state.messageArray.map((value, index) => {
                 return (
-                  <div>
+                  <div key={index}>
                   {index!=0 ? this.state.messageArray[index-1].date != this.state.messageArray[index].date ? <p className="date"><span>{value.date}</span></p> : <p></p> : <p className="date"><span>{value.date}</span></p>}
                   {value.embedded===false ? 
                   <div className="chatLogWrapper" key={index} style={ (value.author).toLowerCase()===(this.state.user.displayName).toLowerCase() ? {textAlign: "right"} : {textAlign: "left"} }>

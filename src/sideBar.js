@@ -17,6 +17,7 @@ export default class SideBar extends Component {
             userName : user.displayName,
             userKey : "",
             activeUsers,
+            loadingUsers : true,
             database : fire.database(),
             searchUser : false,
             searchValue : "",
@@ -46,6 +47,7 @@ export default class SideBar extends Component {
                 }
             }
             this.setState({activeUsers});
+            setTimeout(()=>{this.setState({loadingUsers: false})}, 1000);
             console.log(activeUsers);
             this.props.setActiveUserLength(activeUsers.length);
         });
@@ -144,7 +146,9 @@ export default class SideBar extends Component {
                     <i className="fas fa-search search-icon"></i>
                 </div>
                 <div className="user">
-                {this.state.searchUser===false ?
+                {
+                this.state.loadingUsers ? <div style={{height: "30px", width: "30px", margin: "auto", marginTop: "15px", backgroundRepeat: "no-repeat", "backgroundImage" : "url('http://www.dariusland.com/images/load.gif')", backgroundSize : "contain"}}></div> :
+                this.state.searchUser===false ?
                     this.state.activeUsers.map((value, index)=>{
                         return(
                             <div key= {index} className="activeUser row">
